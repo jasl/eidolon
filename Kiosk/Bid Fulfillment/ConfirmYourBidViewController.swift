@@ -1,6 +1,6 @@
 import UIKit
 import ECPhoneNumberFormatter
-import Moya
+import MoyaX
 import RxSwift
 import Action
 
@@ -64,7 +64,7 @@ class ConfirmYourBidViewController: UIViewController {
         //   else send to enter email
 
         let auctionID = nav.auctionID
-        
+
         let numberIsZeroLength = number.map(isZeroLengthString)
 
         enterButton.rx_action = CocoaAction(enabledIf: numberIsZeroLength.not(), workFactory: { [weak self] _ in
@@ -83,9 +83,9 @@ class ConfirmYourBidViewController: UIViewController {
                     // error to see if it's the original URL to know if the
                     // request succeeded.
 
-                    var response: Moya.Response?
+                    var response: MoyaX.Response?
 
-                    if case .StatusCode(let receivedResponse)? = error as? Moya.Error {
+                    if case .StatusCode(let receivedResponse)? = error as? MoyaX.Error {
                         response = receivedResponse
                     }
 

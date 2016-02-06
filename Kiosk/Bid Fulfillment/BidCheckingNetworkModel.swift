@@ -1,6 +1,6 @@
 import UIKit
 import RxSwift
-import Moya
+import MoyaX
 
 enum BidCheckingError: String {
     case PollingExceeded
@@ -64,11 +64,11 @@ class BidCheckingNetworkModel: NSObject, BidCheckingNetworkModelType {
                 }
             } .doOnNext { _ in
                 self.bidIsResolved.value = true
-                
+
                 // If polling fails, we can still show bid confirmation. Do not error.
             }.catchErrorJustReturn()
     }
-    
+
     private func pollForUpdatedBidderPosition(bidderPositionId: String, provider: AuthorizedNetworking) -> Observable<Void> {
         let updatedBidderPosition = getUpdatedBidderPosition(bidderPositionId, provider: provider)
             .flatMap { bidderPositionObject -> Observable<Void> in
@@ -96,7 +96,7 @@ class BidCheckingNetworkModel: NSObject, BidCheckingNetworkModelType {
                     }
                 }
         }
-        
+
         return Observable<Int>.interval(pollInterval, scheduler: MainScheduler.instance)
             .take(1)
             .map(void)
@@ -140,7 +140,7 @@ class BidCheckingNetworkModel: NSObject, BidCheckingNetworkModelType {
             .mapJSON()
             .mapToObject(SaleArtwork)
     }
-    
+
     private func getUpdatedBidderPosition(bidderPositionId: String, provider: AuthorizedNetworking) -> Observable<BidderPosition> {
         let endpoint = ArtsyAuthenticatedAPI.MyBidPosition(id: bidderPositionId)
         return provider

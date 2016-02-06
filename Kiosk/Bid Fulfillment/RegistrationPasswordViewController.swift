@@ -1,10 +1,10 @@
 import UIKit
 import RxSwift
-import Moya
+import MoyaX
 import Action
 
 class RegistrationPasswordViewController: UIViewController, RegistrationSubController {
-    
+
     @IBOutlet var passwordTextField: TextField!
     @IBOutlet var confirmButton: ActionButton!
     @IBOutlet var subtitleLabel: UILabel!
@@ -110,7 +110,7 @@ class RegistrationPasswordViewController: UIViewController, RegistrationSubContr
             return NopDisposable.instance
         }
     }
-    
+
     func showAuthenticationError() {
         confirmButton.flashError("Incorrect")
         passwordTextField.flashForError()

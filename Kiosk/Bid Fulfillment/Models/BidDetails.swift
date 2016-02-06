@@ -1,6 +1,6 @@
 import UIKit
 import RxSwift
-import Moya
+import MoyaX
 
 @objc class BidDetails: NSObject {
     typealias DownloadImageClosure = (url: NSURL, imageView: UIImageView) -> ()
@@ -35,14 +35,18 @@ import Moya
         let auctionID = saleArtwork?.auctionID ?? ""
 
         if let number = paddleNumber.value, let pin = bidderPIN.value {
-            let newEndpointsClosure = { (target: ArtsyAuthenticatedAPI) -> Endpoint<ArtsyAuthenticatedAPI> in
+            let newWillTransformToRequestClosure: Endpoint -> Endpoint = { endpoint in
                 // Grab existing endpoint to piggy-back off of any existing configurations being used by the sharedprovider.
-                let endpoint = Networking.endpointsClosure()(target)
+                var endpoint = Networking.willTransformToRequestClosure()(endpoint: endpoint)
 
-                return endpoint.endpointByAddingParameters(["auction_pin": pin, "number": number, "sale_id": auctionID])
+                endpoint.headerFields["auction_pin"] = pin
+                endpoint.headerFields["number"] = number
+                endpoint.headerFields["sale_id"] = auctionID
+
+                return endpoint
             }
 
-            let provider = OnlineProvider(endpointClosure: newEndpointsClosure, requestClosure: Networking.endpointResolver(), stubClosure: Networking.APIKeysBasedStubBehaviour, plugins: Networking.authenticatedPlugins)
+            let provider = OnlineProvider<ArtsyAuthenticatedAPI>(backend: Networking.APIKeysBasedBackend(), plugins: Networking.authenticatedPlugins, willTransformToRequest: newWillTransformToRequestClosure)
 
             return .just(AuthorizedNetworking(provider: provider))
 

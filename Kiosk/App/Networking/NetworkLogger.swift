@@ -1,5 +1,5 @@
 import Foundation
-import Moya
+import MoyaX
 import Result
 
 /// Logs network activity (outgoing requests and incoming responses).
@@ -15,13 +15,13 @@ class NetworkLogger: PluginType {
         self.blacklist = blacklist
     }
 
-    func willSendRequest(request: RequestType, target: TargetType) {
+    func willSendRequest(request: NSMutableURLRequest, target: TargetType) {
         // If the target is in the blacklist, don't log it.
         guard blacklist(target) == false else { return }
-        logger.log("Sending request: \(request.request?.URL?.absoluteString ?? String())")
+        logger.log("Sending request: \(request.URL?.absoluteString ?? String())")
     }
 
-    func didReceiveResponse(result: Result<Moya.Response, Moya.Error>, target: TargetType) {
+    func didReceiveResponse(result: Result<MoyaX.Response, MoyaX.Error>, target: TargetType) {
         // If the target is in the blacklist, don't log it.
         guard blacklist(target) == false else { return }
 

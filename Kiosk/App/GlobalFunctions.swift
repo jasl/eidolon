@@ -1,6 +1,6 @@
 import RxSwift
 import Reachability
-import Moya
+import MoyaX
 
 // Ideally a Pod. For now a file.
 func delayToMainThread(delay:Double, closure:()->()) {

@@ -1,6 +1,6 @@
 import Foundation
 import RxSwift
-import Moya
+import MoyaX
 
 protocol BidderNetworkModelType {
     var createdNewUser: Observable<Bool> { get }
@@ -97,7 +97,7 @@ private extension BidderNetworkModel {
     }
 
     func addCardToUser(provider: AuthorizedNetworking) -> Observable<Void> {
-        // If the user was asked to swipe a card, we'd have stored the token. 
+        // If the user was asked to swipe a card, we'd have stored the token.
         // If the token is not there, then the user must already have one on file. So we can skip this step.
         guard let token = bidDetails.newUser.creditCardToken.value else {
             return .just()
@@ -159,7 +159,7 @@ private extension BidderNetworkModel {
             .mapJSON()
             .mapToObject(Bidder)
 
-        return 
+        return
             register.doOnNext{ [weak self] bidder in
                 self?.bidDetails.bidderID.value = bidder.id
                 self?.bidDetails.newUser.hasBeenRegistered.value = true

@@ -56,10 +56,10 @@ extension Optional where Wrapped: Occupiable {
 }
 
 // TODO: PR this into Moya
-import Moya
+import MoyaX
 
-extension Moya.Error {
-    var response: Moya.Response? {
+extension MoyaX.Error {
+    var response: MoyaX.Response? {
         switch self {
         case .ImageMapping(let response): return response
         case .JSONMapping(let response): return response

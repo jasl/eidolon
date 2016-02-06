@@ -1,5 +1,5 @@
 import Foundation
-import Moya
+import MoyaX
 import RxSwift
 
 class APIPingManager {

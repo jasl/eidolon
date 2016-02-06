@@ -1,5 +1,5 @@
 import UIKit
-import Moya
+import MoyaX
 import RxSwift
 import Action
 
@@ -35,7 +35,7 @@ class ConfirmYourBidPINViewController: UIViewController {
             .mapToOptional()
             .bindTo(fulfillmentNav().bidDetails.bidderPIN)
             .addDisposableTo(rx_disposeBag)
-        
+
         let pinExists = pin.map { $0.isNotEmpty }
 
         let bidDetails = fulfillmentNav().bidDetails
@@ -87,7 +87,7 @@ class ConfirmYourBidPINViewController: UIViewController {
                 }
                 .map(void)
                 .doOnError { error in
-                    if let response = (error as? Moya.Error)?.response {
+                    if let response = (error as? MoyaX.Error)?.response {
                         let responseBody = NSString(data: response.data, encoding: NSUTF8StringEncoding)
                         print("Error authenticating(\(response.statusCode)): \(responseBody)")
                     }

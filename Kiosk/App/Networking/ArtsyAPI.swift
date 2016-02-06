@@ -1,6 +1,6 @@
 import Foundation
 import RxSwift
-import Moya
+import MoyaX
 import Alamofire
 
 protocol ArtsyAPIType {
@@ -28,7 +28,7 @@ enum ArtsyAPI {
     case CreateUser(email: String, password: String, phone: String, postCode: String, name: String)
 
     case BidderDetailsNotification(auctionID: String, identifier: String)
-    
+
     case LostPasswordNotification(email: String)
     case FindExistingEmailRegistration(email: String)
 }
@@ -47,7 +47,7 @@ enum ArtsyAuthenticatedAPI {
     case Me
 }
 
-extension ArtsyAPI : TargetType, ArtsyAPIType {
+extension ArtsyAPI : TargetWithSampleType, ArtsyAPIType {
      var path: String {
         switch self {
 
@@ -59,7 +59,7 @@ extension ArtsyAPI : TargetType, ArtsyAPIType {
 
         case AuctionInfo(let id):
             return "/api/v1/sale/\(id)"
-            
+
         case Auctions:
             return "/api/v1/sales"
 
@@ -154,13 +154,13 @@ extension ArtsyAPI : TargetType, ArtsyAPIType {
 
         case ActiveAuctions:
             return ["is_auction": true, "live": true]
-            
+
         default:
             return nil
         }
     }
 
-    var method: Moya.Method {
+    var method: MoyaX.Method {
         switch self {
         case .LostPasswordNotification,
         .CreateUser:
@@ -174,60 +174,60 @@ extension ArtsyAPI : TargetType, ArtsyAPIType {
         }
     }
 
-    var sampleData: NSData {
+    var sampleResponse: StubResponse {
         switch self {
 
         case XApp:
-            return stubbedResponse("XApp")
+            return .NetworkResponse(200,stubbedResponse("XApp"))
 
         case XAuth:
-            return stubbedResponse("XAuth")
+            return .NetworkResponse(200,stubbedResponse("XAuth"))
 
         case TrustToken:
-            return stubbedResponse("XAuth")
+            return .NetworkResponse(200,stubbedResponse("XAuth"))
 
         case Auctions:
-            return stubbedResponse("Auctions")
+            return .NetworkResponse(200,stubbedResponse("Auctions"))
 
         case AuctionListings:
-            return stubbedResponse("AuctionListings")
-            
+            return .NetworkResponse(200,stubbedResponse("AuctionListings"))
+
         case SystemTime:
-            return stubbedResponse("SystemTime")
+            return .NetworkResponse(200,stubbedResponse("SystemTime"))
 
         case ActiveAuctions:
-            return stubbedResponse("ActiveAuctions")
+            return .NetworkResponse(200,stubbedResponse("ActiveAuctions"))
 
         case CreateUser:
-            return stubbedResponse("Me")
+            return .NetworkResponse(200,stubbedResponse("Me"))
 
         case Artwork:
-            return stubbedResponse("Artwork")
+            return .NetworkResponse(200,stubbedResponse("Artwork"))
 
         case Artist:
-            return stubbedResponse("Artist")
+            return .NetworkResponse(200,stubbedResponse("Artist"))
 
         case AuctionInfo:
-            return stubbedResponse("AuctionInfo")
+            return .NetworkResponse(200,stubbedResponse("AuctionInfo"))
 
         // This API returns a 302, so stubbed response isn't valid
         case FindBidderRegistration:
-            return stubbedResponse("Me")
+            return .NetworkResponse(200,stubbedResponse("Me"))
 
         case BidderDetailsNotification:
-            return stubbedResponse("RegisterToBid")
+            return .NetworkResponse(200,stubbedResponse("RegisterToBid"))
 
         case LostPasswordNotification:
-            return stubbedResponse("ForgotPassword")
+            return .NetworkResponse(200,stubbedResponse("ForgotPassword"))
 
         case FindExistingEmailRegistration:
-            return stubbedResponse("ForgotPassword")
+            return .NetworkResponse(200,stubbedResponse("ForgotPassword"))
 
         case AuctionInfoForArtwork:
-            return stubbedResponse("AuctionInfoForArtwork")
+            return .NetworkResponse(200,stubbedResponse("AuctionInfoForArtwork"))
 
         case Ping:
-            return stubbedResponse("Ping")
+            return .NetworkResponse(200,stubbedResponse("Ping"))
 
         }
     }
@@ -239,9 +239,15 @@ extension ArtsyAPI : TargetType, ArtsyAPIType {
         default: return true
         }
     }
+
+    var endpoint: Endpoint {
+        var endpoint = Endpoint(URL: self.fullURL, method: self.method, parameters: self.parameters)
+        endpoint.headerFields["X-Xapp-Token"] = XAppToken().token ?? ""
+        return endpoint
+    }
 }
 
-extension ArtsyAuthenticatedAPI: TargetType, ArtsyAPIType {
+extension ArtsyAuthenticatedAPI: TargetWithSampleType, ArtsyAPIType {
     var path: String {
         switch self {
 
@@ -313,7 +319,7 @@ extension ArtsyAuthenticatedAPI: TargetType, ArtsyAPIType {
         }
     }
 
-    var method: Moya.Method {
+    var method: MoyaX.Method {
         switch self {
         case .PlaceABid,
         .RegisterCard,
@@ -327,38 +333,38 @@ extension ArtsyAuthenticatedAPI: TargetType, ArtsyAPIType {
         }
     }
 
-    var sampleData: NSData {
+    var sampleResponse: StubResponse {
         switch self {
         case CreatePINForBidder:
-            return stubbedResponse("CreatePINForBidder")
+            return .NetworkResponse(200, stubbedResponse("CreatePINForBidder"))
 
         case MyCreditCards:
-            return stubbedResponse("MyCreditCards")
+            return .NetworkResponse(200, stubbedResponse("MyCreditCards"))
 
         case RegisterToBid:
-            return stubbedResponse("RegisterToBid")
+            return .NetworkResponse(200, stubbedResponse("RegisterToBid"))
 
         case MyBiddersForAuction:
-            return stubbedResponse("MyBiddersForAuction")
+            return .NetworkResponse(200, stubbedResponse("MyBiddersForAuction"))
 
         case Me:
-            return stubbedResponse("Me")
+            return .NetworkResponse(200, stubbedResponse("Me"))
 
         case UpdateMe:
-            return stubbedResponse("Me")
+            return .NetworkResponse(200, stubbedResponse("Me"))
 
         case PlaceABid:
-            return stubbedResponse("CreateABid")
+            return .NetworkResponse(200, stubbedResponse("CreateABid"))
 
         case RegisterCard:
-            return stubbedResponse("RegisterCard")
+            return .NetworkResponse(200, stubbedResponse("RegisterCard"))
 
         case MyBidPositionsForAuctionArtwork:
-            return stubbedResponse("MyBidPositionsForAuctionArtwork")
-            
+            return .NetworkResponse(200, stubbedResponse("MyBidPositionsForAuctionArtwork"))
+
         case MyBidPosition:
-            return stubbedResponse("MyBidPosition")
-            
+            return .NetworkResponse(200, stubbedResponse("MyBidPosition"))
+
         }
     }
 
@@ -371,7 +377,7 @@ extension ArtsyAuthenticatedAPI: TargetType, ArtsyAPIType {
 
 func stubbedResponse(filename: String) -> NSData! {
     @objc class TestClass: NSObject { }
-    
+
     let bundle = NSBundle(forClass: TestClass.self)
     let path = bundle.pathForResource(filename, ofType: "json")
     return NSData(contentsOfFile: path!)

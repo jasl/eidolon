@@ -61,7 +61,7 @@ pod 'XNGMarkdownParser'
 pod 'SwiftyJSON'
 pod 'RxSwift'
 pod 'RxCocoa'
-pod 'Moya/RxSwift'
+pod 'MoyaX/RxSwift', :git => 'https://github.com/jasl/MoyaX.git'
 pod 'NSObject+Rx'
 pod 'Action'
 

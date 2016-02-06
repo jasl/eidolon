@@ -1,5 +1,5 @@
 import UIKit
-import Moya
+import MoyaX
 import RxSwift
 import Action
 
@@ -37,7 +37,7 @@ class ConfirmYourBidArtsyLoginViewController: UIViewController {
         bidDetailsPreviewView.bidDetails = bidDetails
 
         emailTextField.text = nav.bidDetails.newUser.email.value ?? ""
-        
+
         let emailText = emailTextField.rx_text.takeUntil(viewWillDisappear)
         let passwordText = passwordTextField.rx_text.takeUntil(viewWillDisappear)
 
@@ -118,7 +118,7 @@ class ConfirmYourBidArtsyLoginViewController: UIViewController {
         fulfillmentNav().bidDetails.newUser.password.value = ""
         passwordTextField.text = ""
     }
-    
+
     @IBAction func forgotPasswordTapped(sender: AnyObject) {
         let alertController = UIAlertController(title: "Forgot Password", message: "Please enter your email address and we'll send you a reset link.", preferredStyle: .Alert)
 

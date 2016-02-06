@@ -1,6 +1,6 @@
 import Foundation
 import RxSwift
-import Moya
+import MoyaX
 import Action
 
 protocol RegistrationPasswordViewModelType {
